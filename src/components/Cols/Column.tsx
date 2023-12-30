@@ -21,6 +21,7 @@ const Column: FunctionComponent<ColumnProps> = ({ col }) => {
   function handleAdd() {
     dispatch(add({ colId: col.id, itemName: item }));
     setActive(false);
+    setItem("");
   }
 
   return (

@@ -50,7 +50,7 @@ const Input: FunctionComponent<InputProps> = ({
           <div className="bg-[#ffffff20] w-full rounded-md p-2 flex flex-row items-start h-fit">
             <textarea
               ref={textareaRef}
-              className="w-full h-auto bg-transparent outline-none resize-none max-heigh-[200px]"
+              className="w-full h-auto bg-transparent outline-none resize-none max-heigh-[200px] text-white"
               placeholder="Enter Card Title"
               value={item}
               onChange={(e) => {
@@ -71,7 +71,7 @@ const Input: FunctionComponent<InputProps> = ({
       )}
       {!active && (
         <S.Button
-          className="w-full flex flex-row items-center rounded-md hover:bg-slate-200 text-start p-1 text-sm font-bold"
+          className="w-full flex flex-row items-center rounded-md hover:bg-slate-200 text-start p-1 text-sm font-bold text-white"
           onClick={openText}
         >
           <HiPlus /> Add a Card
