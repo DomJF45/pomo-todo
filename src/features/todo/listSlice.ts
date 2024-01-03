@@ -5,13 +5,19 @@ interface ListState {
   columns: iColumn[];
 }
 
+const listFromStorage = localStorage.getItem("list");
+const initialCols: iColumn[] = listFromStorage
+  ? JSON.parse(listFromStorage)
+  : [];
+
 const initialState: ListState = {
-  columns: [
-    { name: "To Do", id: 1, items: [] },
-    { name: "Doing", id: 2, items: [] },
-    { name: "Done", id: 3, items: [] },
-  ],
+  columns: initialCols,
 };
+
+function saveWrapper(list: iColumn[]): iColumn[] {
+  localStorage.setItem("list", JSON.stringify(list));
+  return list;
+}
 
 export const listSlice = createSlice({
   name: "list",
@@ -19,7 +25,7 @@ export const listSlice = createSlice({
   reducers: {
     add: (
       state,
-      action: PayloadAction<{ colId: number; itemName: string }>
+      action: PayloadAction<{ colId: string; itemName: string }>
     ) => {
       const newCols = [...state.columns]; // shallow copy
       const targetCol = newCols.find((col) => col.id === action.payload.colId);
@@ -30,10 +36,10 @@ export const listSlice = createSlice({
           id: nanoid(),
         };
         targetCol.items.push(newItem);
-        state.columns = newCols;
+        state.columns = saveWrapper(newCols);
       }
     },
-    move: (state, action: PayloadAction<{ colId: number; itemId: string }>) => {
+    move: (state, action: PayloadAction<{ colId: string; itemId: string }>) => {
       const newCols = [...state.columns]; // shallow copy
       const currentColIndex = newCols.findIndex(
         (col) => col.id === action.payload.colId
@@ -58,11 +64,11 @@ export const listSlice = createSlice({
       }
 
       // assign shallow copy to state
-      state.columns = newCols;
+      state.columns = saveWrapper(newCols);
     },
     remove: (
       state,
-      action: PayloadAction<{ colId: number; itemId: string }>
+      action: PayloadAction<{ colId: string; itemId: string }>
     ) => {
       const newCols = [...state.columns];
       const targetCol = newCols.findIndex(
@@ -75,10 +81,44 @@ export const listSlice = createSlice({
       if (targetCol !== -1 && targetItem !== -1) {
         newCols[targetCol].items.splice(targetItem, 1);
       }
-      state.columns = newCols;
+      state.columns = saveWrapper(newCols);
+    },
+    renameColumn: (
+      state,
+      action: PayloadAction<{ colId: string; newName: string }>
+    ) => {
+      const { colId, newName } = action.payload;
+      const newCols = [...state.columns];
+      const targetCol = newCols.find((col) => col.id === colId);
+      if (targetCol) {
+        targetCol.name = newName;
+      }
+
+      state.columns = saveWrapper(newCols);
+    },
+    removeColumn: (state, action: PayloadAction<{ colId: string }>) => {
+      const { colId } = action.payload;
+      const newCols = [...state.columns];
+      const targetCol = newCols.findIndex((col) => col.id === colId);
+      if (targetCol !== -1) {
+        newCols.splice(targetCol, 1);
+      }
+
+      state.columns = saveWrapper(newCols);
+    },
+    addColumn: (state, action: PayloadAction<string>) => {
+      const newCols = [...state.columns];
+      const newCol: iColumn = {
+        name: action.payload,
+        id: nanoid(),
+        items: [],
+      };
+      newCols.push(newCol);
+      state.columns = saveWrapper(newCols);
     },
   },
 });
 
-export const { add, move, remove } = listSlice.actions;
+export const { add, move, remove, renameColumn, removeColumn, addColumn } =
+  listSlice.actions;
 export default listSlice.reducer;

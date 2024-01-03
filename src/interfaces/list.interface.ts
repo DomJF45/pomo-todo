@@ -1,6 +1,6 @@
 export interface iColumn {
   name: string;
-  id: number;
+  id: string;
   items: iItem[];
 }
 

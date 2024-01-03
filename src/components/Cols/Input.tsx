@@ -59,7 +59,7 @@ const Input: FunctionComponent<InputProps> = ({
               }}
             />
           </div>
-          <div className="flex flex-row gap-3">
+          <div className="flex flex-row gap-3 text-sm">
             <S.AddButton className="w-1/4" onClick={handleAddItem}>
               Add
             </S.AddButton>
@@ -71,7 +71,7 @@ const Input: FunctionComponent<InputProps> = ({
       )}
       {!active && (
         <S.Button
-          className="w-full flex flex-row items-center rounded-md hover:bg-slate-200 text-start p-1 text-sm font-bold text-white"
+          className="w-full flex flex-row items-center rounded-md hover:bg-slate-200 text-start p-2 text-sm font-bold text-white"
           onClick={openText}
         >
           <HiPlus /> Add a Card

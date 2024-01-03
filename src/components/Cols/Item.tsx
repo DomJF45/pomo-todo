@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { move, remove } from "../../features/todo/listSlice";
 
 interface ItemProps {
-  colId: number;
+  colId: string;
   item: iItem;
 }
 

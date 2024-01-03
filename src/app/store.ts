@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import list from "../features/todo/listSlice";
+import timer from "../features/timer/timerSlice";
 
 export const store = configureStore({
-  reducer: { list },
+  reducer: { list, timer },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
