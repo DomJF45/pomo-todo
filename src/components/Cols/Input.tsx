@@ -1,6 +1,7 @@
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 import { HiPlus, HiX } from "react-icons/hi";
 import * as S from "../Styles";
+import useEnterKey from "../../hooks/useEnterKey";
 
 interface InputProps {
   active: boolean;
@@ -30,18 +31,19 @@ const Input: FunctionComponent<InputProps> = ({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
-
-  const handleAddItem = () => {
-    closeText();
-    handleAdd();
-  };
-
   const openText = () => {
     setActive(true);
   };
-  const closeText = () => {
+  const closeText = useCallback(() => {
     setActive(false);
-  };
+  }, [setActive]);
+
+  const handleAddItem = useCallback(() => {
+    closeText();
+    handleAdd();
+  }, [closeText, handleAdd]);
+
+  useEnterKey({ active, callback: handleAddItem });
 
   return (
     <div className="flex flex-row items-center gap-3 p-2">
@@ -51,7 +53,7 @@ const Input: FunctionComponent<InputProps> = ({
             <textarea
               ref={textareaRef}
               className="w-full h-auto bg-transparent outline-none resize-none max-heigh-[200px] text-white"
-              placeholder="Enter Card Title"
+              placeholder="Enter Card Title..."
               value={item}
               onChange={(e) => {
                 handleTextAreaChange();
@@ -60,7 +62,7 @@ const Input: FunctionComponent<InputProps> = ({
             />
           </div>
           <div className="flex flex-row gap-3 text-sm">
-            <S.AddButton className="w-1/4" onClick={handleAddItem}>
+            <S.AddButton className="w-1/4 bg-slate-200" onClick={handleAddItem}>
               Add
             </S.AddButton>
             <S.Button onClick={closeText}>

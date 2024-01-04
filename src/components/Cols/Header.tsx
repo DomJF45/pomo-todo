@@ -1,7 +1,9 @@
-import { FunctionComponent, useState, useRef, useEffect } from "react";
+import { FunctionComponent, useState, useRef } from "react";
 import { iColumn } from "../../interfaces/list.interface";
 import { useAppDispatch } from "../../app/hooks";
 import { renameColumn } from "../../features/todo/listSlice";
+import useEnterKey from "../../hooks/useEnterKey";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface HeaderProps {
   col: iColumn;
@@ -21,28 +23,9 @@ const Header: FunctionComponent<HeaderProps> = ({ col }) => {
     );
   }
 
-  useEffect(() => {
-    const handleOutSideClick = (e: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-        setEdit(false);
-      }
-    };
+  useOutsideClick({ targetRefs: [inputRef], callback: () => setEdit(false) });
+  useEnterKey({ active: edit, callback: () => setEdit(false) });
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (edit && e.key === "Enter") {
-        setEdit(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutSideClick);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleOutSideClick);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [edit]);
-
-  console.log("render");
   return (
     <div className="flex flex-row w-full justify-between">
       {edit ? (

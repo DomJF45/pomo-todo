@@ -21,14 +21,14 @@ const Button = styled.a<{ $primary?: boolean }>`
 `;
 
 const AddButton = styled.a`
-  background: #f5d0fe;
+  background: slate-300;
   border-radius: 0.375rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   &:hover {
-    filter: brightness(0.75);
+    filter: brightness(0.85);
   }
 `;
 

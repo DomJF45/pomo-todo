@@ -44,7 +44,7 @@ const Column: FunctionComponent<ColumnProps> = ({ col }) => {
   ];
 
   return (
-    <div className="w-[17rem] bg-[#ffffff20] rounded-xl h-max min-h-50">
+    <div className="w-[17rem] bg-[#ffffff20] rounded-xl h-max min-h-50 shadow-lg">
       <div className="p-3 h-100">
         <div className="flex flex-row">
           <Header col={col} />
