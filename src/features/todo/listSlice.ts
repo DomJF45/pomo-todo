@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 import { iColumn, iItem } from "../../interfaces/list.interface";
+import { findTargetColumnById } from "./utils";
 
 interface ListState {
   columns: iColumn[];
@@ -39,41 +40,38 @@ export const listSlice = createSlice({
         state.columns = saveWrapper(newCols);
       }
     },
-    move: (state, action: PayloadAction<{ colId: string; itemId: string }>) => {
-      const newCols = [...state.columns]; // shallow copy
-      const currentColIndex = newCols.findIndex(
-        (col) => col.id === action.payload.colId
-      ); // get index of current col
-      const targetItemIndex = newCols[currentColIndex].items.findIndex(
-        (item) => item.id === action.payload.itemId
-      ); // get index of item
+    move: (
+      state,
+      action: PayloadAction<{
+        source: iColumn;
+        destination: iColumn;
+        droppableSource: { index: number };
+        droppableDestination: { index: number };
+      }>
+    ) => {
+      const { source, destination, droppableSource, droppableDestination } =
+        action.payload;
+      const sourceClone = [...source.items];
+      const destClone = [...destination.items];
+      const [removed] = sourceClone.splice(droppableSource.index, 1);
+      destClone.splice(droppableDestination.index, 0, removed);
+      const newCols = [...state.columns];
+      const sourceColIndex = findTargetColumnById(newCols, source.id);
+      const destColIndex = findTargetColumnById(newCols, destination.id);
 
-      // check if indices exist
-      if (currentColIndex !== -1 && targetItemIndex !== -1) {
-        // get item from array[index]
-        const targetItem = newCols[currentColIndex].items[targetItemIndex];
-        // remove item from index up (not including end)
-        newCols[currentColIndex].items.splice(targetItemIndex, 1);
+      if (sourceColIndex !== -1 && destColIndex !== -1) {
+        newCols[sourceColIndex].items = sourceClone;
+        newCols[destColIndex].items = destClone;
 
-        // if the next index exists, push to next else to prev
-        if (currentColIndex + 1 < newCols.length) {
-          newCols[currentColIndex + 1].items.push(targetItem);
-        } else if (currentColIndex - 1 >= 0) {
-          newCols[0].items.push(targetItem);
-        }
+        state.columns = saveWrapper(newCols);
       }
-
-      // assign shallow copy to state
-      state.columns = saveWrapper(newCols);
     },
     remove: (
       state,
       action: PayloadAction<{ colId: string; itemId: string }>
     ) => {
       const newCols = [...state.columns];
-      const targetCol = newCols.findIndex(
-        (col) => col.id === action.payload.colId
-      );
+      const targetCol = findTargetColumnById(newCols, action.payload.colId);
       const targetItem = newCols[targetCol].items.findIndex(
         (item) => item.id === action.payload.itemId
       );
@@ -99,7 +97,7 @@ export const listSlice = createSlice({
     removeColumn: (state, action: PayloadAction<{ colId: string }>) => {
       const { colId } = action.payload;
       const newCols = [...state.columns];
-      const targetCol = newCols.findIndex((col) => col.id === colId);
+      const targetCol = findTargetColumnById(newCols, colId);
       if (targetCol !== -1) {
         newCols.splice(targetCol, 1);
       }
@@ -116,9 +114,34 @@ export const listSlice = createSlice({
       newCols.push(newCol);
       state.columns = saveWrapper(newCols);
     },
+    reorder: (
+      state,
+      action: PayloadAction<{
+        list: iColumn;
+        startIndex: number;
+        endIndex: number;
+      }>
+    ) => {
+      const { list, startIndex, endIndex } = action.payload;
+      const newCols = [...state.columns];
+      const targetCol = findTargetColumnById(newCols, list.id);
+      if (targetCol !== -1) {
+        const [removed] = newCols[targetCol].items.splice(startIndex, 1);
+        newCols[targetCol].items.splice(endIndex, 0, removed);
+      }
+
+      state.columns = saveWrapper(newCols);
+    },
   },
 });
 
-export const { add, move, remove, renameColumn, removeColumn, addColumn } =
-  listSlice.actions;
+export const {
+  add,
+  move,
+  remove,
+  renameColumn,
+  removeColumn,
+  addColumn,
+  reorder,
+} = listSlice.actions;
 export default listSlice.reducer;

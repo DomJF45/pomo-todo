@@ -1,6 +1,4 @@
 import { FunctionComponent, useCallback, useEffect, useRef } from "react";
-import { HiPlus, HiX } from "react-icons/hi";
-import * as S from "../Styles";
 import useEnterKey from "../../hooks/useEnterKey";
 
 interface InputProps {
@@ -31,9 +29,7 @@ const Input: FunctionComponent<InputProps> = ({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
-  const openText = () => {
-    setActive(true);
-  };
+
   const closeText = useCallback(() => {
     setActive(false);
   }, [setActive]);
@@ -45,8 +41,14 @@ const Input: FunctionComponent<InputProps> = ({
 
   useEnterKey({ active, callback: handleAddItem });
 
+  useEffect(() => {
+    if (active && textareaRef.current) {
+      textareaRef.current.scrollIntoView();
+    }
+  }, [active]);
+
   return (
-    <div className="flex flex-row items-center gap-3 p-2">
+    <div className="flex flex-row items-center gap-3">
       {active && (
         <div className="flex flex-col gap-3 w-full">
           <div className="bg-[#ffffff20] w-full rounded-md p-2 flex flex-row items-start h-fit">
@@ -59,25 +61,10 @@ const Input: FunctionComponent<InputProps> = ({
                 handleTextAreaChange();
                 handleSetItem(e);
               }}
+              autoFocus
             />
           </div>
-          <div className="flex flex-row gap-3 text-sm">
-            <S.AddButton className="w-1/4 bg-slate-200" onClick={handleAddItem}>
-              Add
-            </S.AddButton>
-            <S.Button onClick={closeText}>
-              <HiX />
-            </S.Button>
-          </div>
         </div>
-      )}
-      {!active && (
-        <S.Button
-          className="w-full flex flex-row items-center rounded-md hover:bg-slate-200 text-start p-2 text-sm font-bold text-white"
-          onClick={openText}
-        >
-          <HiPlus /> Add a Card
-        </S.Button>
       )}
     </div>
   );

@@ -49,7 +49,7 @@ const Pomodoro = () => {
   }, [dispatch, time]);
 
   return (
-    <div className="w-1/4 h-full flex flex-col gap-5">
+    <div className="w-1/3 h-full flex flex-col gap-5">
       <div className="bg-[#ffffff20] h-max flex flex-col justify-end rounded-xl items-center shadow-lg py-10">
         <div className="flex flex-col h-full justify-evenly items-center gap-5 mx-auto w-full">
           <div className="text-white text-7xl text-center font-mono w-full tracking-wide">

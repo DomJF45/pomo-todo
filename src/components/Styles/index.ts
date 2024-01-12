@@ -32,4 +32,27 @@ const AddButton = styled.a`
   }
 `;
 
-export { Button, AddButton };
+const ListContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 20px;
+    height: 20px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #a7b6bb;
+  }
+`;
+
+export { Button, AddButton, ListContainer };

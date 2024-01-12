@@ -5,10 +5,21 @@ import "./index.css";
 import { store } from "./app/store.ts";
 import { Provider } from "react-redux";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+const renderStrict = {
+  on: (
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  ),
+  off: (
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>
+  ),
+};
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <>{renderStrict.off}</>
 );

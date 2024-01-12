@@ -1,26 +1,23 @@
 import { FunctionComponent } from "react";
-import { HiArrowNarrowRight, HiX } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import * as S from "../Styles";
 import { iItem } from "../../interfaces/list.interface";
 import { useAppDispatch } from "../../app/hooks";
-import { move, remove } from "../../features/todo/listSlice";
+import { remove } from "../../features/todo/listSlice";
 
-interface ItemProps {
+interface ItemProps extends React.HTMLProps<HTMLDivElement> {
   colId: string;
   item: iItem;
+  isDragging: boolean;
 }
 
-const Item: FunctionComponent<ItemProps> = ({ colId, item }) => {
+const Item: FunctionComponent<ItemProps> = ({
+  colId,
+  item,
+  isDragging,
+  ...rest
+}) => {
   const dispatch = useAppDispatch();
-
-  function handleMove() {
-    dispatch(
-      move({
-        colId: colId,
-        itemId: item.id,
-      })
-    );
-  }
 
   function handleDelete() {
     dispatch(
@@ -31,15 +28,17 @@ const Item: FunctionComponent<ItemProps> = ({ colId, item }) => {
     );
   }
 
+  const getItemStyle = isDragging ? "bg-slate-300 rotate-6" : "bg-slate-100";
+
   return (
-    <div className="p-3 bg-slate-100 rounded-md flex flex-row justify-between">
+    <div
+      className={`p-3 ${getItemStyle} rounded-md flex flex-row justify-between select-none hover:border-1px border-pink-200`}
+      {...rest}
+    >
       <p>{item.name}</p>
       <div className="flex flex-row justify-between">
         <S.Button className="px-3" onClick={handleDelete} $primary>
           <HiX />
-        </S.Button>
-        <S.Button className="px-3" onClick={handleMove} $primary>
-          <HiArrowNarrowRight />
         </S.Button>
       </div>
     </div>

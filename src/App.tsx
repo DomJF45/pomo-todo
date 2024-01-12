@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div
-      className={`w-full min-h-screen ${bgMap[status]} p-10 flex flex-col items-start gap-10 ease-in duration-100`}
+      className={`w-full h-screen ${bgMap[status]} pl-10 py-10 flex flex-col items-start gap-10 ease-in duration-100`}
     >
       <h1 className="text-xl text-white">Pomo-todoro 🍅</h1>
       <div className="flex flex-row w-full gap-3 h-full">
