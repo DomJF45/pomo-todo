@@ -6,7 +6,6 @@ import Column from "./Column";
 import NewColumn from "./NewColumn";
 import { findTargetColumnById } from "../../features/todo/utils";
 import * as S from "../Styles";
-import { CSSProperties } from "styled-components";
 
 const List = () => {
   const { columns } = useAppSelector((state) => state.list);

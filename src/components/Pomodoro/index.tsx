@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { start, stop, tick, init, move } from "../../features/timer/timerSlice";
+import { updateTitle } from "../../utils/updateTitle";
 
 const MOCK_STATUS = [
   { status: "Pomodoro" },
@@ -13,6 +15,9 @@ const TIMER_BUTTON = {
   INACTIVE: "w-full bg-[#ffffff20] text-slate-300",
 };
 
+const buttonPress = new Audio("/ButtonPress.mp3");
+const endTimer = new Audio("/EndTimer.mp3");
+
 const Pomodoro = () => {
   const {
     formattedTime,
@@ -21,17 +26,29 @@ const Pomodoro = () => {
     time,
   } = useAppSelector((state) => state.timer);
   const dispatch = useAppDispatch();
-
+  const handlePressSound = () => {
+    if (buttonPress.paused) {
+      buttonPress.play();
+    } else {
+      buttonPress.currentTime = 0;
+    }
+  };
   const handleStart = () => {
     dispatch(start());
+    handlePressSound();
   };
 
   const handleStop = () => {
     dispatch(stop());
+    handlePressSound();
   };
 
   const handleInit = (timer: string) => {
     dispatch(init(timer));
+  };
+
+  const handlePlayFinish = () => {
+    endTimer.play();
   };
 
   const startStopButtonLabel = timerIsOn ? "STOP" : "START";
@@ -43,10 +60,17 @@ const Pomodoro = () => {
 
     if (time <= 0) {
       dispatch(move());
+      handlePlayFinish();
     }
 
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [dispatch, time]);
+
+  useEffect(() => {
+    updateTitle(formattedTime, status);
+  }, [formattedTime, status]);
 
   return (
     <div className="w-1/3 h-full flex flex-col gap-5">
@@ -72,6 +96,7 @@ const Pomodoro = () => {
                 ? TIMER_BUTTON.ACTIVE
                 : TIMER_BUTTON.INACTIVE
             }`}
+            key={stat.status}
             onClick={() => handleInit(stat.status)}
           >
             <p>{stat.status}</p>

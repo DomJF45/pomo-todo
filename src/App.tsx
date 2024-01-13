@@ -1,22 +1,23 @@
-import { useAppSelector } from "./app/hooks";
 import List from "./components/Cols/List";
 import Pomodoro from "./components/Pomodoro";
+import ProgressBar from "./components/Pomodoro/ProgressBar";
+import { useStatusColor } from "./hooks/useStatus";
 
 function App() {
-  const { status } = useAppSelector((state) => state.timer);
-
-  const bgMap: { [key: string]: string } = {
-    Pomodoro: "bg-red-500",
-    "Short Break": "bg-cyan-500",
-    "Long Break": "bg-indigo-500",
-  };
+  const { statusColor } = useStatusColor();
 
   return (
     <div
-      className={`w-full h-screen ${bgMap[status]} pl-10 py-10 flex flex-col items-start gap-10 ease-in duration-100`}
+      className={`w-full h-screen ${statusColor} py-10 flex flex-col items-start gap-10 ease-in duration-100`}
     >
-      <h1 className="text-xl text-white">Pomo-todoro 🍅</h1>
-      <div className="flex flex-row w-full gap-3 h-full">
+      <div className="flex flex-col gap-3 w-full px-10">
+        <div className="flex flex-row gap-3 items-center w-full">
+          <img src="/tomate.png" className="w-[50px]" />
+          <h1 className="text-2xl text-white">Pomo-todo</h1>
+        </div>
+        <ProgressBar />
+      </div>
+      <div className="flex flex-row w-full gap-3 h-full pl-10">
         <Pomodoro />
         <List />
       </div>

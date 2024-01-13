@@ -7,7 +7,9 @@ export enum Status {
   LongBreak = "Long Break",
 }
 
-const timerMap: { [key: string]: { time: number; formattedTime: string } } = {
+export const timerMap: {
+  [key: string]: { time: number; formattedTime: string };
+} = {
   Pomodoro: {
     time: 25 * 60,
     formattedTime: "25:00",
