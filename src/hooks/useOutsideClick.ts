@@ -1,14 +1,11 @@
 import { useEffect } from "react";
 
-interface UseOutsideClickProps<T extends HTMLElement> {
-  targetRefs: React.RefObject<T>[];
+interface UseOutsideClickProps {
+  targetRefs: React.RefObject<HTMLElement>[];
   callback: () => void;
 }
 
-const useOutsideClick = <T extends HTMLElement>({
-  targetRefs,
-  callback,
-}: UseOutsideClickProps<T>) => {
+const useOutsideClick = ({ targetRefs, callback }: UseOutsideClickProps) => {
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       const anyTrueRefs = targetRefs.some((tr) => tr.current);

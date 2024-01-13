@@ -1,5 +1,6 @@
 import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 import useEnterKey from "../../hooks/useEnterKey";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface InputProps {
   active: boolean;
@@ -40,6 +41,10 @@ const Input: FunctionComponent<InputProps> = ({
   }, [closeText, handleAdd]);
 
   useEnterKey({ active, callback: handleAddItem });
+  useOutsideClick({
+    targetRefs: [textareaRef],
+    callback: () => setActive(false),
+  });
 
   useEffect(() => {
     if (active && textareaRef.current) {
