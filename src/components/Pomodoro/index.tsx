@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { start, stop, tick, init, move } from "../../features/timer/timerSlice";
 import { updateTitle } from "../../utils/updateTitle";
