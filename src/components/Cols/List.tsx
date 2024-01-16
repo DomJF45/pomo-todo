@@ -2,9 +2,9 @@ import { useState, useCallback } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addColumn, move, reorder } from "../../features/todo/listSlice";
+import { findTargetColumnById } from "../../features/todo/utils";
 import Column from "./Column";
 import NewColumn from "./NewColumn";
-import { findTargetColumnById } from "../../features/todo/utils";
 import * as S from "../Styles";
 
 const List = () => {
